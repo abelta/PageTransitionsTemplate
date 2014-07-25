@@ -98,14 +98,14 @@ class PageTransitions
         jQuery(currentPage).addClass( 'pt-page-current' )
 
 
-    resetPage = (outPage, inPage) =>
+    resetPage = (outPage, inPage) ->
         console.log 'resetPage'
         #console.log 'this', this
         jQuery(outPage).attr 'class', jQuery(outPage).data('originalClassList')
         jQuery(inPage).attr 'class', "#{jQuery(inPage).data('originalClassList')} pt-page-current"
 
 
-    onEndAnimation = (outPage, inPage) =>
+    onEndAnimation = (outPage, inPage) ->
         console.log 'onEndAnimation'
         #console.log 'this', this
         endCurrentPage = false
@@ -115,24 +115,27 @@ class PageTransitions
         
 
 
-    flip: (page, animation) =>
+    flip: (page, animation) ->
         console.log 'pageTransitions#flip'
         return false if isAnimating
         isAnimating = true
         console.log 'page', page
-        page = do =>
+        page = do ->
             if page?
                 if page instanceof Number
                     pages[page]
                 else if page instanceof Object # DOM or jQuery element.
                     page
             else
-                console.log "currentPageIndex", currentPageIndex
-
                 currentPageIndex = jQuery(pages).index(currentPage)
-                if currentPageIndex > pages.length then i = 0
-                else i = currentPageIndex+1
                 console.log "currentPageIndex", currentPageIndex
+                #if currentPageIndex >= pages.length-1 then i = 0
+                #else i = currentPageIndex+1
+
+                if currentPageIndex < pages.length-1 then i = currentPageIndex+1
+                else i = 0
+                console.log "currentPageIndex", currentPageIndex
+                console.log 'i', i
                 pages[i]
         currentPage = page
         console.log 'page', page
