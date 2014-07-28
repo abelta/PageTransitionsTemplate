@@ -3,7 +3,7 @@
   var PageTransitions;
 
   PageTransitions = (function() {
-    var animationEndEventName, animationEndEventNames, animationSets, currentPage, dom, endCurrentPage, endNextPage, isAnimating, onEndAnimation, pages, resetPage, support;
+    var animationEndEventName, animationEndEventNames, animationSets, currentPage, dom, endCurrentPage, endPrevPage, isAnimating, onEndAnimation, pages, resetPage, support;
 
     isAnimating = false;
 
@@ -15,9 +15,9 @@
 
     currentPage = jQuery(pages).first();
 
-    endCurrentPage = false;
+    endPrevPage = false;
 
-    endNextPage = false;
+    endCurrentPage = false;
 
     animationEndEventNames = {
       'WebkitAnimation': 'webkitAnimationEnd',
@@ -254,6 +254,7 @@
     };
 
     onEndAnimation = function(outPage, inPage) {
+      var endNextPage;
       console.log('onEndAnimation');
       endCurrentPage = false;
       endNextPage = false;
@@ -262,7 +263,7 @@
     };
 
     PageTransitions.prototype.flip = function(page, animation) {
-      var inClass, nextPage, outClass;
+      var inClass, nextPage, outClass, prevPage;
       console.log('pageTransitions#flip');
       if (isAnimating) {
         return false;
@@ -290,6 +291,7 @@
           return pages[i];
         }
       })();
+      prevPage = currentPage;
       currentPage = page;
       console.log('page', page);
       if (animation instanceof Object) {
@@ -303,21 +305,21 @@
       nextPage = jQuery(currentPage).addClass('pt-page-current');
       outClass = animation['out'];
       inClass = animation['in'];
-      jQuery(currentPage).addClass(outClass).on(animationEndEventName, (function(_this) {
+      jQuery(prevPage).addClass(outClass).on(animationEndEventName, (function(_this) {
         return function() {
-          jQuery(currentPage).off(animationEndEventName);
-          endCurrentPage = true;
-          if (endNextPage) {
-            return onEndAnimation(currentPage, nextPage);
+          jQuery(prevPage).off(animationEndEventName);
+          endPrevPage = true;
+          if (endCurrentPage) {
+            return onEndAnimation(prevPage, currentPage);
           }
         };
       })(this));
-      jQuery(nextPage).addClass(inClass).on(animationEndEventName, (function(_this) {
+      jQuery(currentPage).addClass(inClass).on(animationEndEventName, (function(_this) {
         return function() {
-          jQuery(nextPage).off(animationEndEventName);
-          endNextPage = true;
-          if (endCurrentPage) {
-            return onEndAnimation(currentPage, nextPage);
+          jQuery(currentPage).off(animationEndEventName);
+          endCurrentPage = true;
+          if (endPrevPage) {
+            return onEndAnimation(prevPage, currentPage);
           }
         };
       })(this));

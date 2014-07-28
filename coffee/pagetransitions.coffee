@@ -6,8 +6,8 @@ class PageTransitions
     pages = jQuery('.pt-page')
     support = Modernizr.cssanimations
     currentPage = jQuery(pages).first()
+    endPrevPage = false
     endCurrentPage = false
-    endNextPage = false
     animationEndEventNames = 
         'WebkitAnimation' : 'webkitAnimationEnd',
         'OAnimation' : 'oAnimationEnd',
@@ -137,6 +137,7 @@ class PageTransitions
                 console.log "currentPageIndex", currentPageIndex
                 console.log 'i', i
                 pages[i]
+        prevPage = currentPage
         currentPage = page
         console.log 'page', page
         if animation instanceof Object
@@ -150,16 +151,20 @@ class PageTransitions
         outClass = animation['out']
         inClass = animation['in']
 
-        jQuery( currentPage ).addClass( outClass ).on animationEndEventName, =>
+        
+        jQuery( prevPage ).addClass( outClass ).on animationEndEventName, =>
+            jQuery( prevPage ).off animationEndEventName
+            endPrevPage = true
+            onEndAnimation prevPage, currentPage if endCurrentPage
+            #onEndAnimation nextPage, currentPage if endNextPage
+        
+        
+        jQuery( currentPage ).addClass( inClass ).on animationEndEventName, =>
             jQuery( currentPage ).off animationEndEventName
             endCurrentPage = true
-            onEndAnimation currentPage, nextPage if endNextPage
-
-        jQuery( nextPage ).addClass( inClass ).on animationEndEventName, =>
-            jQuery( nextPage ).off animationEndEventName
-            endNextPage = true
-            onEndAnimation currentPage, nextPage if endCurrentPage
-
+            onEndAnimation prevPage, currentPage if endPrevPage
+            #onEndAnimation nextPage, currentPage if endCurrentPage
+        
         onEndAnimation currentPage, nextPage unless support    
 
 
