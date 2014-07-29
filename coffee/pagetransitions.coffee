@@ -1,6 +1,5 @@
 class PageTransitions
 
-
     isAnimating = false
     dom = jQuery('#pt-main')
     pages = jQuery('.pt-page')
@@ -86,12 +85,8 @@ class PageTransitions
     ]
 
     constructor:  ->
-        console.log 'pageTransitions#constructor'
-        #console.log '@dom', @dom
-        #console.log '@pages', @pages
 
         resetClass = (page) ->
-            console.log 'pagetransitions#constructor#resetClass'
             jQuery(page).data 'originalClassList', jQuery(page).attr('class')
 
         resetClass page for page in pages
@@ -99,27 +94,21 @@ class PageTransitions
 
 
     resetPage = (outPage, inPage) ->
-        console.log 'resetPage'
-        #console.log 'this', this
         jQuery(outPage).attr 'class', jQuery(outPage).data('originalClassList')
         jQuery(inPage).attr 'class', "#{jQuery(inPage).data('originalClassList')} pt-page-current"
 
 
     onEndAnimation = (outPage, inPage) ->
-        console.log 'onEndAnimation'
-        #console.log 'this', this
         endCurrentPage = false
         endNextPage = false
         resetPage outPage, inPage
         isAnimating = false
         
 
-
     flip: (page, animation) ->
-        console.log 'pageTransitions#flip'
         return false if isAnimating
         isAnimating = true
-        console.log 'page', page
+        
         page = do ->
             if page?
                 if page instanceof Number
@@ -128,42 +117,32 @@ class PageTransitions
                     page
             else
                 currentPageIndex = jQuery(pages).index(currentPage)
-                console.log "currentPageIndex", currentPageIndex
-                #if currentPageIndex >= pages.length-1 then i = 0
-                #else i = currentPageIndex+1
-
                 if currentPageIndex < pages.length-1 then i = currentPageIndex+1
                 else i = 0
-                console.log "currentPageIndex", currentPageIndex
-                console.log 'i', i
                 pages[i]
+        
         prevPage = currentPage
         currentPage = page
-        console.log 'page', page
+        
         if animation instanceof Object
             animation = animation
         else if animation instanceof Number
             animation = animationSets[ animation ]
         else animation = animationSets[ Math.floor(Math.random()*animationSets.length) ]
-        console.log 'animation', animation
-        #nextPage = jQuery(page).addClass( 'pt-page-current' )
+        
         nextPage = jQuery(currentPage).addClass( 'pt-page-current' )
         outClass = animation['out']
         inClass = animation['in']
 
-        
         jQuery( prevPage ).addClass( outClass ).on animationEndEventName, =>
             jQuery( prevPage ).off animationEndEventName
             endPrevPage = true
             onEndAnimation prevPage, currentPage if endCurrentPage
-            #onEndAnimation nextPage, currentPage if endNextPage
-        
         
         jQuery( currentPage ).addClass( inClass ).on animationEndEventName, =>
             jQuery( currentPage ).off animationEndEventName
             endCurrentPage = true
             onEndAnimation prevPage, currentPage if endPrevPage
-            #onEndAnimation nextPage, currentPage if endCurrentPage
         
         onEndAnimation currentPage, nextPage unless support    
 

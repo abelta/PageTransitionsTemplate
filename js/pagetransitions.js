@@ -235,9 +235,7 @@
 
     function PageTransitions() {
       var page, resetClass, _i, _len;
-      console.log('pageTransitions#constructor');
       resetClass = function(page) {
-        console.log('pagetransitions#constructor#resetClass');
         return jQuery(page).data('originalClassList', jQuery(page).attr('class'));
       };
       for (_i = 0, _len = pages.length; _i < _len; _i++) {
@@ -248,14 +246,12 @@
     }
 
     resetPage = function(outPage, inPage) {
-      console.log('resetPage');
       jQuery(outPage).attr('class', jQuery(outPage).data('originalClassList'));
       return jQuery(inPage).attr('class', "" + (jQuery(inPage).data('originalClassList')) + " pt-page-current");
     };
 
     onEndAnimation = function(outPage, inPage) {
       var endNextPage;
-      console.log('onEndAnimation');
       endCurrentPage = false;
       endNextPage = false;
       resetPage(outPage, inPage);
@@ -264,12 +260,10 @@
 
     PageTransitions.prototype.flip = function(page, animation) {
       var inClass, nextPage, outClass, prevPage;
-      console.log('pageTransitions#flip');
       if (isAnimating) {
         return false;
       }
       isAnimating = true;
-      console.log('page', page);
       page = (function() {
         var currentPageIndex, i;
         if (page != null) {
@@ -280,20 +274,16 @@
           }
         } else {
           currentPageIndex = jQuery(pages).index(currentPage);
-          console.log("currentPageIndex", currentPageIndex);
           if (currentPageIndex < pages.length - 1) {
             i = currentPageIndex + 1;
           } else {
             i = 0;
           }
-          console.log("currentPageIndex", currentPageIndex);
-          console.log('i', i);
           return pages[i];
         }
       })();
       prevPage = currentPage;
       currentPage = page;
-      console.log('page', page);
       if (animation instanceof Object) {
         animation = animation;
       } else if (animation instanceof Number) {
@@ -301,7 +291,6 @@
       } else {
         animation = animationSets[Math.floor(Math.random() * animationSets.length)];
       }
-      console.log('animation', animation);
       nextPage = jQuery(currentPage).addClass('pt-page-current');
       outClass = animation['out'];
       inClass = animation['in'];
