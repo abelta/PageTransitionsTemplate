@@ -84,6 +84,9 @@ class PageTransitions
         {out: 'pt-page-rotateSlideOut', in: 'pt-page-rotateSlideIn'}
     ]
 
+    /**
+     * @constructor
+     **/
     constructor:  ->
 
         resetClass = (page) ->
@@ -105,6 +108,11 @@ class PageTransitions
         isAnimating = false
         
 
+    /**
+     * Public method to flip a page with an animation.
+     * @param page {Number|Object} Number of the page that comes in or page itself.
+     * @param animation {Number|Object} Number of the animation set to be used, a couple of animations passed as an object or nothing for a random animation.
+     **/
     flip: (page, animation) ->
         return false if isAnimating
         isAnimating = true
