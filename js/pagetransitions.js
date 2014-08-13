@@ -13,7 +13,7 @@
 
     support = Modernizr.cssanimations;
 
-    currentPage = jQuery(pages).first();
+    currentPage = jQuery(pages).first()[0];
 
     endPrevPage = false;
 
@@ -233,6 +233,11 @@
       }
     ];
 
+
+    /*
+     * @constructor
+     */
+
     function PageTransitions() {
       var page, resetClass, _i, _len;
       resetClass = function(page) {
@@ -244,6 +249,11 @@
       }
       jQuery(currentPage).addClass('pt-page-current');
     }
+
+    PageTransitions.prototype.currentPage = function() {
+      console.log('currentPage', currentPage);
+      return currentPage;
+    };
 
     resetPage = function(outPage, inPage) {
       jQuery(outPage).attr('class', jQuery(outPage).data('originalClassList'));
@@ -258,8 +268,16 @@
       return isAnimating = false;
     };
 
+
+    /*
+     * Public method to flip a page with an animation.
+     * @param page {Number|Object} Number of the page that comes in or page itself.
+     * @param animation {Number|Object} Number of the animation set to be used, a couple of animations passed as an object or nothing for a random animation.
+     */
+
     PageTransitions.prototype.flip = function(page, animation) {
       var inClass, nextPage, outClass, prevPage;
+      console.log('FLIP');
       if (isAnimating) {
         return false;
       }
@@ -283,10 +301,16 @@
         }
       })();
       prevPage = currentPage;
-      currentPage = page;
-      if (animation instanceof Object) {
+      currentPage = jQuery(page)[0];
+      console.log('prevPage', prevPage);
+      console.log('currentPage', currentPage);
+      if (prevPage === currentPage) {
+        onEndAnimation();
+        return false;
+      }
+      if (typeof animation === 'object') {
         animation = animation;
-      } else if (animation instanceof Number) {
+      } else if (typeof animation === 'number') {
         animation = animationSets[animation];
       } else {
         animation = animationSets[Math.floor(Math.random() * animationSets.length)];

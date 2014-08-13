@@ -4,7 +4,7 @@ class PageTransitions
     dom = jQuery('#pt-main')
     pages = jQuery('.pt-page')
     support = Modernizr.cssanimations
-    currentPage = jQuery(pages).first()
+    currentPage = jQuery(pages).first()[0]
     endPrevPage = false
     endCurrentPage = false
     animationEndEventNames = 
@@ -95,6 +95,12 @@ class PageTransitions
         resetClass page for page in pages
         jQuery(currentPage).addClass( 'pt-page-current' )
 
+    ##
+    # Public method to access the page that is currently being displayed.
+    ##
+    currentPage: ->
+        console.log 'currentPage', currentPage
+        return currentPage
 
     resetPage = (outPage, inPage) ->
         jQuery(outPage).attr 'class', jQuery(outPage).data('originalClassList')
@@ -114,6 +120,7 @@ class PageTransitions
     # @param animation {Number|Object} Number of the animation set to be used, a couple of animations passed as an object or nothing for a random animation.
     ###
     flip: (page, animation) ->
+        console.log 'FLIP'
         return false if isAnimating
         isAnimating = true
         
@@ -130,13 +137,22 @@ class PageTransitions
                 pages[i]
         
         prevPage = currentPage
-        currentPage = page
+        currentPage = jQuery(page)[0]
         
-        if animation instanceof Object
+
+        console.log 'prevPage', prevPage
+        console.log 'currentPage', currentPage
+        
+        if prevPage is currentPage
+            do onEndAnimation
+            return false
+
+        if typeof animation is 'object'
             animation = animation
-        else if animation instanceof Number
+        else if typeof animation is 'number'
             animation = animationSets[ animation ]
-        else animation = animationSets[ Math.floor(Math.random()*animationSets.length) ]
+        else
+            animation = animationSets[ Math.floor(Math.random()*animationSets.length) ]
         
         nextPage = jQuery(currentPage).addClass( 'pt-page-current' )
         outClass = animation['out']
