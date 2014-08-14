@@ -99,7 +99,6 @@ class PageTransitions
     # Public method to access the page that is currently being displayed.
     ##
     currentPage: ->
-        console.log 'currentPage', currentPage
         return currentPage
 
     resetPage = (outPage, inPage) ->
@@ -120,7 +119,6 @@ class PageTransitions
     # @param animation {Number|Object} Number of the animation set to be used, a couple of animations passed as an object or nothing for a random animation.
     ###
     flip: (page, animation) ->
-        console.log 'FLIP'
         return false if isAnimating
         isAnimating = true
         
@@ -138,10 +136,6 @@ class PageTransitions
         
         prevPage = currentPage
         currentPage = jQuery(page)[0]
-        
-
-        console.log 'prevPage', prevPage
-        console.log 'currentPage', currentPage
         
         if prevPage is currentPage
             do onEndAnimation

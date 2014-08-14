@@ -251,7 +251,6 @@
     }
 
     PageTransitions.prototype.currentPage = function() {
-      console.log('currentPage', currentPage);
       return currentPage;
     };
 
@@ -277,7 +276,6 @@
 
     PageTransitions.prototype.flip = function(page, animation) {
       var inClass, nextPage, outClass, prevPage;
-      console.log('FLIP');
       if (isAnimating) {
         return false;
       }
@@ -302,8 +300,6 @@
       })();
       prevPage = currentPage;
       currentPage = jQuery(page)[0];
-      console.log('prevPage', prevPage);
-      console.log('currentPage', currentPage);
       if (prevPage === currentPage) {
         onEndAnimation();
         return false;
