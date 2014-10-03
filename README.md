@@ -48,6 +48,14 @@ The flip method is overcharged and accepts the following parameters
 The animation sets is stored in the _pagetransitions.coffee_ in the constant _animationSets_.
 
 
+
+See it in action
+==========
+
+[Here](https://cdn.rawgit.com/abelta/PageTransitionsTemplate/master/index.html)
+
+
+
 Licensing and terms of use
 ==========
 
